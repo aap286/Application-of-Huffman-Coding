@@ -1,0 +1,74 @@
+TreeNode firstNode = new TreeNode();
+        TreeNode secNode = new TreeNode();
+        TreeNode newNode = new TreeNode();
+        CharFreq newChar = new CharFreq();
+
+        int i = 0;
+        while (!source.isEmpty()) {
+
+            // if target is null;
+            if (target.isEmpty()) {
+                firstNode = new TreeNode(source.dequeue(), null, null);
+                secNode = new TreeNode(source.dequeue(), null, null);
+
+            } // if target isn't empty
+              // when both target noes have the same value
+
+            // if soure is smaller than first target node
+            else if (source.peek().getProbOcc() <= target.peek().getData().getProbOcc() && source.size() > 1) {
+
+                firstNode = new TreeNode(source.dequeue(), null, null);
+
+                // if second source is smaller than
+                if (source.peek().getProbOcc() <= target.peek().getData().getProbOcc()) {
+                    secNode = new TreeNode(source.dequeue(), null, null);
+                }
+                // if second source bigger than target
+                else if (source.peek().getProbOcc() > target.peek().getData().getProbOcc()) {
+                    secNode = target.dequeue();
+                }
+            }
+            // if source is bigger than target
+            else if (source.peek().getProbOcc() > target.peek().getData().getProbOcc() && source.size() > 1) {
+                firstNode = target.dequeue();
+
+                // if source smaller than target
+                if (target.size() == 0 || source.peek().getProbOcc() <= target.peek().getData().getProbOcc()) {
+                    StdOut.println(target.size());
+                    secNode = new TreeNode(source.dequeue(), null, null);
+                }
+
+                // if source is bigger than target
+                else if (source.peek().getProbOcc() > target.peek().getData().getProbOcc()) {
+                    secNode = target.dequeue();
+                }
+            }
+            // is size of soure is one
+            else if (source.size() == 1 && source.peek().getProbOcc() <= target.peek().getData().getProbOcc()) {
+
+                firstNode = new TreeNode(source.dequeue(), null, null);
+                secNode = target.dequeue();
+
+            }
+
+            // adding to the tree
+            newChar = new CharFreq((char) 0, firstNode.getData().getProbOcc() +
+                    secNode.getData().getProbOcc());
+
+            newChar.setCharacter(null);
+            newNode = new TreeNode(newChar, firstNode, secNode);
+            target.enqueue(newNode);
+
+            StdOut.println(firstNode.getData().getCharacter() + " " + firstNode.getData().getProbOcc());
+            StdOut.println(secNode.getData().getCharacter() + " " + secNode.getData().getProbOcc());
+            StdOut.println(newNode.getData().getProbOcc());
+            StdOut.println("-------------------");
+            i++;
+        }
+
+        StdOut.println(target.size());
+
+        // for (int j = 0; j < target.size(); j++) {
+        // StdOut.println(target.dequeue().getData().getProbOcc());
+        // }
+        // sorting the tagret qeuue to make a single tree

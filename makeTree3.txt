@@ -1,0 +1,63 @@
+double w11 = 0;
+        double w20 = 0;
+        double w02 = 0;
+        double wmin = 0;
+
+        ArrayList<TreeNode> nodes = new ArrayList<>();
+        ArrayList<TreeNode> merges = new ArrayList<>();
+
+        // making the source queue
+        for (int index = 0; index < sortedCharFreqList.size(); index++) {
+            nodes.add(new TreeNode(sortedCharFreqList.get(index), null, null));
+        }
+
+        int n = nodes.size(); // length of nodes
+
+        for (int i = 0; i < n - 1; i++) {
+            ArrayList<Double> weights = new ArrayList<>();
+            if (nodes.size() >= 2) {
+                w20 = nodes.get(0).getData().getProbOcc() + nodes.get(1).getData().getProbOcc();
+                weights.add(w20);
+            }
+
+            if (nodes.size() >= 1 && merges.size() >= 1) {
+
+                w11 = nodes.get(0).getData().getProbOcc() + merges.get(0).getData().getProbOcc();
+                weights.add(w11);
+            }
+
+            if (merges.size() >= 2) {
+
+                w02 = merges.get(0).getData().getProbOcc() + merges.get(1).getData().getProbOcc();
+                weights.add(w02);
+            }
+            wmin = Collections.min(weights);
+
+            if (nodes.size() >= 2 && wmin == w20) {
+
+                CharFreq data = new CharFreq(null, w20);
+                TreeNode node = new TreeNode(data, nodes.get(0), nodes.get(1));
+                merges.add(node);
+                nodes.remove(0);
+                nodes.remove(0);
+            }
+
+            else if (nodes.size() >= 1 && merges.size() >= 1 && wmin == w11) {
+                CharFreq data = new CharFreq(null, w11);
+                TreeNode node = new TreeNode(data, nodes.get(0), merges.get(0));
+                merges.add(node);
+                nodes.remove(0);
+                merges.remove(0);
+            }
+
+            else if (merges.size() >= 2 && wmin == w02) {
+                CharFreq data = new CharFreq(null, w02);
+                TreeNode node = new TreeNode(data, merges.get(0), merges.get(1));
+                merges.add(node);
+                merges.remove(0);
+                merges.remove(0);
+            }
+
+        }
+
+        huffmanRoot = merges.get(0);
